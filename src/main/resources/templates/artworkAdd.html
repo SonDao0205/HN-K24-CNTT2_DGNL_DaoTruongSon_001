@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+
+    <div class="container">
+        <a th:href="@{/artwork/list}" class="btn btn-secondary mb-4">Quay lại</a>
+        <form th:action="@{/artwork/save}" th:object="${artwork}" method="post" enctype="multipart/form-data">
+            <input type="hidden" th:field="*{id}">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title" th:field="*{title}">
+                <small class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></small>
+            </div>
+            <div class="form-group">
+                <label for="artist">Artist</label>
+                <input type="text" class="form-control" id="artist" th:field="*{artist}">
+                <small class="text-danger" th:if="${#fields.hasErrors('artist')}" th:errors="*{artist}"></small>
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" class="form-control" id="price" th:field="*{price}">
+            </div>
+            <div class="form-group">
+                <label for="releaseDate">Release Date</label>
+                <input type="date" class="form-control" id="releaseDate" th:field="*{releaseDate}">
+                <small class="text-danger" th:if="${#fields.hasErrors('releaseDate')}" th:errors="*{releaseDate}"></small>
+            </div>
+            <div class="form-group">
+                <label>Cover Image</label>
+                <input type="file" name="file" class="form-control-file">
+
+                <div th:if="*{coverImage}" class="mt-2">
+                    <img th:src="@{'/uploads/' + *{coverImage}}" width="150" class="img-thumbnail">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <select th:field="*{category}" class="form-control">
+                    <option value="">-- Chọn danh mục --</option>
+                    <option th:each="cat : ${categories}"
+                            th:value="${cat.id}"
+                            th:text="${cat.name}"></option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Trạng thái</label>
+                <select th:field="*{status}" class="form-control">
+                    <option value="">-- Chọn trạng thái --</option>
+                    <option th:value="true">Hoạt động</option>
+                    <option th:value="false">Ngừng hoạt động</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">Lưu</button>
+
+        </form>
+    </div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

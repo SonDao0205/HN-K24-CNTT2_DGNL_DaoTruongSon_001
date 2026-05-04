@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+
+    <div th:replace="~{header}"></div>
+    <div class="container">
+        <div class="row justify-content-between">
+            <form th:action="@{/artwork/list}" method="get" class="form-inline">
+                <input type="text" name="title" class="form-control mr-2"
+                       placeholder="Tìm tên" th:value="${title}">
+
+                <select name="categoryId" class="form-control mr-2">
+                    <option value="">-- Danh mục --</option>
+                    <option th:each="cat : ${categories}"
+                            th:value="${cat.id}"
+                            th:text="${cat.name}"
+                            th:selected="${cat.id == categoryId}"></option>
+                </select>
+
+                <button type="submit" class="btn btn-success">Tìm kiếm</button>
+                <a th:href="@{/artwork/list}" class="btn btn-secondary ml-2">Reset</a>
+            </form>
+            <a th:href="@{/artwork/add}" class="btn btn-primary mb-4">Thêm</a>
+        </div>
+
+        <table class="table">
+            <thead>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Artist</th>
+                <th>Price</th>
+                <th>Release Date</th>
+                <th>Cover Image</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Action</th>
+            </thead>
+            <tbody>
+            <tr th:each="a : ${artworks}">
+                <td th:text="${a.id}"></td>
+                <td th:text="${a.title}"></td>
+                <td th:text="${a.artist}"></td>
+                <td th:text="${a.price}"></td>
+                <td th:text="${a.releaseDate}"></td>
+                <td>
+                    <img th:if="${a.coverImage}" th:src="@{'/uploads/' + ${a.coverImage}}"
+                         width="80" height="100" style="object-fit: cover;" class="rounded">
+                    <span th:unless="${a.coverImage}">No Image</span>
+                </td>
+                <td th:text="${a.category != null ? a.category.name : 'Chưa phân loại'}"></td>
+                <td th:text="${a.status ? 'Hoạt động' : 'Ngừng'}"></td>
+                <td>
+                    <a th:href="@{/artwork/edit/{id}(id=${a.id})}" class="btn btn-warning btn-sm">Sửa</a>
+                    <a th:href="@{/artwork/delete/{id}(id=${a.id})}" class="btn btn-danger btn-sm"
+                       onclick="return confirm('Bạn có chắc muốn xoá?')">Xoá</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/artwork/list(page=${currentPage - 1}, title=${title}, categoryId=${categoryId})}">Previous</a>
+                </li>
+
+                <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages > 0 ? totalPages : 1)}"
+                    th:classappend="${currentPage == i} ? 'active'">
+                    <a class="page-link" th:href="@{/artwork/list(page=${i}, title=${title}, categoryId=${categoryId})}" th:text="${i}"></a>
+                </li>
+
+                <li class="page-item" th:classappend="${currentPage == totalPages || totalPages == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/artwork/list(page=${currentPage + 1}, title=${title}, categoryId=${categoryId})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>
